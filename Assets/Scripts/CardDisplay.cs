@@ -13,26 +13,28 @@ public class CardDisplay : MonoBehaviour
     public TextMeshProUGUI typeText;
     public TextMeshProUGUI powerText;
     
-
+    public GameObject GameHandler;
 
     // Start is called before the first frame update
     void Start()
     {
-        refresh();
+        
     }
 
     //Refresh the texts
-    void refresh()
+    void Update()
     {
         nameText.text = CardDatabase.cardList[id].cardName;
         typeText.text = CardDatabase.cardList[id].type;
         powerText.text = " " + CardDatabase.cardList[id].power;
     }
     
-    //Update the Id of the card
-    public void updateId(int Id)
-    {
-        id = Id;
-        refresh();
+    void OnMouseOver() {
+        Debug.Log("Hello!");
+        GameHandler.GetComponent<Game>().hoveredOnCard = transform.gameObject;
+    }
+
+    void OnMouseExit() {
+        GameHandler.GetComponent<Game>().hoveredOnCard = null;
     }
 }
