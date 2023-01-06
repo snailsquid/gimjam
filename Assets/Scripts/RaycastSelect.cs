@@ -11,21 +11,26 @@ public class RaycastSelect : MonoBehaviour
     public Material defaultMaterial;
     public int selectOffset;
 
+    private float duration = 3f;
+    private float elapsedTime;
+
     private Transform _selection;
 
-    void resetCard()
+    void resetCard(float percentageComplete)
     {
         if(_selection!= null) { 
             var selectionRenderer = _selection.GetComponent<Renderer>();
             selectionRenderer.material = defaultMaterial;
-            _selection.parent.position = new Vector3(_selection.parent.position.x, -15, _selection.parent.position.z);
+            _selection.parent.position = Vector3.Lerp(new Vector3(_selection.parent.position.x,-5, _selection.parent.position.z), new Vector3(_selection.parent.position.x, -15, _selection.parent.position.z),duration);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        resetCard();
+        elapsedTime += Time.deltaTime;
+        float percentageComplete = elapsedTime / duration;
+        resetCard(percentageComplete);
 
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -38,11 +43,11 @@ public class RaycastSelect : MonoBehaviour
                 {
                     if (selection == _selection)
                     {
-                        selection.parent.position = new Vector3(selection.parent.position.x, selectOffset, selection.parent.position.z);
+                        selection.parent.position = Vector3.Lerp(new Vector3(selection.parent.position.x, -15, selection.parent.position.z), new Vector3(selection.parent.position.x, -5, selection.parent.position.z), duration);
                         selectionRenderer.material = highlightMaterial;
                     }
                     else { 
-                        resetCard();
+                        resetCard(percentageComplete);
                     }
                 } 
                     _selection = selection;
