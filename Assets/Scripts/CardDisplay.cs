@@ -28,13 +28,4 @@ public class CardDisplay : MonoBehaviour
         typeText.text = CardDatabase.cardList[id].type;
         powerText.text = " " + CardDatabase.cardList[id].power;
     }
-    
-    void OnMouseOver() {
-        Debug.Log("Hello!");
-        GameHandler.GetComponent<Game>().hoveredOnCard = transform.gameObject;
-    }
-
-    void OnMouseExit() {
-        GameHandler.GetComponent<Game>().hoveredOnCard = null;
-    }
 }
