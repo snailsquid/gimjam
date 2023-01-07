@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +13,10 @@ public class RaycastSelect : MonoBehaviour
     public Material defaultMaterial;
     public int selectOffset;
 
+    //pick
+    public List<GameObject> pickedCards = new();
+
+
     public float speed = 0.5f;
 
     public Animator[] selectAnimator;
@@ -20,7 +26,7 @@ public class RaycastSelect : MonoBehaviour
 
     void resetCard()
     {
-        if(_selection!= null&&_selection.parent!=null) {
+        if(_selection!= null&&_selection.parent!=null&&_selection.GetComponent<Renderer>()!=null) {
              var selectionRenderer = _selection.GetComponent<Renderer>();
             unselectAnimator = _selection.parent.GetComponentsInChildren<Animator>();
             foreach(Animator animator in unselectAnimator)
@@ -28,7 +34,6 @@ public class RaycastSelect : MonoBehaviour
                 animator.Play("UnselectCard", 0, 0.0f);
             }
             selectionRenderer.material = defaultMaterial;
-            Debug.Log(_selection);
         }
     }
 
@@ -46,26 +51,41 @@ public class RaycastSelect : MonoBehaviour
                     if (selection == _selection)
                     {
 
-                    if (selection.CompareTag(selectableTag))
-                    {
-                        selectionRenderer.material = highlightMaterial;
-                    }
-                    } else {
-                    if (_selection != null&&selection.parent!=null&&_selection.GetComponent<Renderer>()!=null)
-                    {
-                        if (selectionRenderer.material != _selection.GetComponent<Renderer>().material)
+                        if (selection.CompareTag(selectableTag))
                         {
-                            Debug.Log("first highlight");
-                            //selection.parent.position = new Vector3(selection.parent.position.x, -5, selection.parent.position.z);
-                            selectAnimator = selection.parent.GetComponentsInChildren<Animator>();
-                            foreach (Animator animator in selectAnimator)
+                            selectionRenderer.material = highlightMaterial;
+                            
+                            if (Input.GetMouseButtonDown(0))
                             {
-                                animator.Play("SelectCard", 0, 0.0f);
+                            selectionRenderer.material = defaultMaterial;
+                            foreach(Transform child in selection.parent)
+                            {
+                                child.GetComponent<Animator>().Play("UnselectCard", 0, 0.0f);
+                                Debug.Log(child.localPosition);
+                                child.localPosition = new Vector3(0, 0, 0);
+                            }
+                            if (pickedCards.Count>=2)
+                                {
+                                    pickedCards[0].SetActive(true);
+                                    pickedCards.RemoveAt(0);
+                                }
+                                pickedCards.Add(selection.parent.gameObject);
+                                selection.parent.gameObject.SetActive(false);
                             }
                         }
-                    }
-                    Debug.Log("no highlight");
-                        resetCard();
+                    } else {
+                        if (_selection != null&&selection.parent!=null&&_selection.GetComponent<Renderer>()!=null)
+                        {
+                            if (selectionRenderer.material != _selection.GetComponent<Renderer>().material)
+                            {
+                                selectAnimator = selection.parent.GetComponentsInChildren<Animator>();
+                                foreach (Animator animator in selectAnimator)
+                                {
+                                    animator.Play("SelectCard", 0, 0.0f);
+                                }
+                            }
+                        }
+                            resetCard();
                     }
                 } 
                     _selection = selection;

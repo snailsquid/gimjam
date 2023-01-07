@@ -46,9 +46,10 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            int id = Random.Range(1, CardDatabase.cardList.Count - 1);
+            int id = Random.Range(1, CardDatabase.cardList.Count);
             GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, CardTemplate.transform.parent);
             Temp.GetComponent<CardDisplay>().id = id;
+            Temp.GetComponent<CardDisplay>().order = i;
             Hand.Add(Temp);
         }
     }

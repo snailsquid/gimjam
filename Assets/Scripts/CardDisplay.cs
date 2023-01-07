@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+[System.Serializable]
 
 public class CardDisplay : MonoBehaviour
 {
-    public int id;
+    public int id, order;
 
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI typeText;
@@ -27,5 +28,7 @@ public class CardDisplay : MonoBehaviour
         nameText.text = CardDatabase.cardList[id].cardName;
         typeText.text = CardDatabase.cardList[id].type;
         powerText.text = " " + CardDatabase.cardList[id].power;
+
+        gameObject.name = CardDatabase.cardList[id].cardName;
     }
 }
