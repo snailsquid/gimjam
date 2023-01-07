@@ -9,7 +9,7 @@ public class Game : MonoBehaviour
     public int drawAmount;
     public float cardGap;
     public float cardOffset;
-    public GameObject hoveredOnCard = null;
+    public GameObject database;
 
     // Start is called before the first frame update
     void Start()
@@ -46,11 +46,22 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            int id = Random.Range(1, CardDatabase.cardList.Count);
+            int index = Random.Range(0, database.GetComponent<Deck>().deck.Count);
+            int id = database.GetComponent<Deck>().deck[index];
             GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, CardTemplate.transform.parent);
             Temp.GetComponent<CardDisplay>().id = id;
             Temp.GetComponent<CardDisplay>().order = i;
             Hand.Add(Temp);
         }
+    }
+
+    public void removeFromHand(GameObject card)
+    {
+        Hand.Remove(card);
+    }
+
+    public void addToHand(GameObject card)
+    {
+        Hand.Add(card);
     }
 }
