@@ -271,6 +271,7 @@ public class Game : MonoBehaviour
         }
     }
 
+    //kiigo was here
     public void startGame()
     {
         PickedLocations = new GameObject[2] { PickedLocation1, PickedLocation2 };
