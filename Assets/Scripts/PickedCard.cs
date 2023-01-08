@@ -57,7 +57,11 @@ public class PickedCard : MonoBehaviour
                 GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation);
                 Temp.SetActive(true);
                 Temp.transform.parent = pickCardsHolder.transform;
+                foreach(Transform child in Temp.transform)
+                {
 
+                child.tag = "Picked";
+                }
             }
             pickedCards =   new List<GameObject>(_pickedCards);
             same = true;

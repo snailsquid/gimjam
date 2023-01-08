@@ -46,7 +46,7 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            int index = Random.Range(0, database.GetComponent<Deck>().deck.Count);
+            int index = Random.Range(1, database.GetComponent<Deck>().deck.Count);
             int id = database.GetComponent<Deck>().deck[index];
             GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, CardTemplate.transform.parent);
             Temp.GetComponent<CardDisplay>().id = id;

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Selectable
   - Picked
+  - Enemy
+  - Playing
   layers:
   - Default
   - TransparentFX
