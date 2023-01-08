@@ -63,9 +63,10 @@ public class RaycastSelect : MonoBehaviour
                             selectionRenderer.material = defaultMaterial;
                             foreach (Transform child in selection.parent)
                             {
-                                child.GetComponent<Animator>().Play("UnselectCard", 0, 0.0f);
-                                Debug.Log(child.localPosition);
+                                child.GetComponent<Animator>().Play("ClickPick", 0, 0.0f);
+                                Debug.Log("before " + child.localPosition);
                                 child.localPosition = new Vector3(0, 0, 0);
+                                Debug.Log("after " + child.localPosition);
                             }
                             if (pickedCards.Count >= 2)
                             {

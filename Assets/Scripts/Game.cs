@@ -121,7 +121,16 @@ public class Game : MonoBehaviour
                 Temp.transform.parent = pickCardsHolder.transform;
                 foreach (Transform child in Temp.transform)
                 {
+                    if(i==0)
+                    {
+                        child.GetComponent<Animator>().Play("PutInPicked", 0, 0.0f);
+                    }
+                    else
+                    {
+                        child.GetComponent<Animator>().Play("PutInPicked2", 0, 0.0f);
 
+                    }
+                    child.localPosition = new Vector3(0, 0, 0);
                     child.tag = "Picked";
                 }
             }
@@ -160,6 +169,10 @@ public class Game : MonoBehaviour
                 GameObject Temp = Instantiate(pickedCards[i], PlayerLoc[i].transform.position, PlayerLoc[i].transform.rotation);
                 Temp.SetActive(true);
                 Temp.tag = "Playing";
+                foreach (Transform child in Temp.transform)
+                {
+                    child.tag = "Playing";
+                }
                 int id = Temp.GetComponent<CardDisplay>().id;
                 string type = CardDatabase.cardList[id].type;
                 int power = CardDatabase.cardList[id].power;
@@ -197,7 +210,10 @@ public class Game : MonoBehaviour
                 GameObject ETemp = Instantiate(CardTemplate, EnemyLoc[i].transform.position, EnemyLoc[i].transform.rotation, CardTemplate.transform.parent);
                 ETemp.GetComponent<CardDisplay>().id = id;
                 ETemp.GetComponent<CardDisplay>().order = i;
-                ETemp.tag = "Enemy";
+                foreach(Transform child in ETemp.transform)
+                {
+                    child.tag = "Enemy";
+                }
                 EPickedCards.Add(ETemp);
                 string type = CardDatabase.cardList[id].type;
                 int power = CardDatabase.cardList[id].power;
