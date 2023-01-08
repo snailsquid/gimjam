@@ -13,13 +13,11 @@ public class CardDisplay : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI typeText;
     public TextMeshProUGUI powerText;
-    
-    public GameObject GameHandler;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     //Refresh the texts

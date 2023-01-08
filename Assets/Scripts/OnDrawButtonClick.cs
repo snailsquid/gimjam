@@ -21,4 +21,8 @@ public class OnDrawButtonClick : MonoBehaviour
     {
         gameSystem.GetComponent<Game>().drawCard(amount);
     }
+    public void Play()
+    {
+        gameSystem.GetComponent<Game>().play();
+    }
 }

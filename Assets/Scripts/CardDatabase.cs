@@ -13,6 +13,7 @@ public class CardDatabase : MonoBehaviour
         cardList.Add(new Card(2, "Social Credit", "Health", 1));
         cardList.Add(new Card(3, "Will Slap", "Attack", 2));
         cardList.Add(new Card(4, "America looking for oil", "Attack", 3));
+        cardList.Add(new Card(5, "Think Mark", "Defense", 2));
         Debug.Log("hi");
     }
 }
