@@ -9,7 +9,7 @@ public class Game : MonoBehaviour
     public int drawAmount;
     public float cardGap;
     public float cardOffset;
-    public GameObject database;
+    public GameObject database, handHolder;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +20,14 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Hand.Clear();
+        foreach(Transform child in handHolder.transform) 
+        {
+            if (child.gameObject.activeSelf)
+            {
+                Hand.Add(child.gameObject);
+            }
+        }
         if (Hand.Count % 2 == 0)
         {
             for (int i = 0; i < Hand.Count; i++)
@@ -48,10 +56,9 @@ public class Game : MonoBehaviour
         {
             int index = Random.Range(1, database.GetComponent<Deck>().deck.Count);
             int id = database.GetComponent<Deck>().deck[index];
-            GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, CardTemplate.transform.parent);
+            GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, handHolder.transform);
             Temp.GetComponent<CardDisplay>().id = id;
             Temp.GetComponent<CardDisplay>().order = i;
-            Hand.Add(Temp);
         }
     }
 
@@ -64,4 +71,5 @@ public class Game : MonoBehaviour
     {
         Hand.Add(card);
     }
+
 }

@@ -28,7 +28,7 @@ public class RaycastSelect : MonoBehaviour
 
     void resetCard()
     {
-        if (_selection != null && _selection.parent != null && _selection.GetComponent<Renderer>() != null)
+        if (_selection != null && _selection.parent != null && _selection.GetComponent<Renderer>() != null&& _selection.CompareTag(selectableTag))
         {
             var selectionRenderer = _selection.GetComponent<Renderer>();
             unselectAnimator = _selection.parent.GetComponentsInChildren<Animator>();
@@ -67,12 +67,10 @@ public class RaycastSelect : MonoBehaviour
                                 Debug.Log(child.localPosition);
                                 child.localPosition = new Vector3(0, 0, 0);
                             }
-                            system.GetComponent<Game>().removeFromHand(selection.parent.gameObject);
                             if (pickedCards.Count >= 2)
                             {
                                 pickedCards[0].SetActive(true);
                                 pickedCards.RemoveAt(0);
-                                system.GetComponent<Game>().addToHand(pickedCards[0]);
                             }
                             pickedCards.Add(selection.parent.gameObject);
 
@@ -82,16 +80,13 @@ public class RaycastSelect : MonoBehaviour
                 }
                 else
                 {
-                    if (_selection != null && selection.parent != null && _selection.GetComponent<Renderer>() != null)
+                    if (_selection != null && selection.parent != null && _selection.GetComponent<Renderer>() != null&& selectionRenderer.material != _selection.GetComponent<Renderer>().material&& selection.CompareTag(selectableTag))
                     {
-                        if (selectionRenderer.material != _selection.GetComponent<Renderer>().material)
-                        {
                             selectAnimator = selection.parent.GetComponentsInChildren<Animator>();
                             foreach (Animator animator in selectAnimator)
                             {
                                 animator.Play("SelectCard", 0, 0.0f);
                             }
-                        }
                     }
                     resetCard();
                 }
