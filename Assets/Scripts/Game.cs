@@ -48,6 +48,9 @@ public class Game : MonoBehaviour
     public bool playing;
     public TextMeshProUGUI playButtonText;
 
+    public List<int> pDeck = new();
+    public List<int> eDeck = new();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,14 +72,14 @@ public class Game : MonoBehaviour
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 0, 10 - (i * 0.1f)) + cardOffset;
+                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 0, 10 + (i * 0.1f)) + cardOffset;
             }
         }
         else
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 0, 10 - (i * 0.1f)) + cardOffset;
+                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 0, 10 + (i * 0.1f)) + cardOffset;
             }
         }
         List<GameObject> _pickedCards = RaycastHolder.GetComponent<RaycastSelect>().pickedCards;
@@ -142,7 +145,7 @@ public class Game : MonoBehaviour
         pHealthBar.value = playerHealth;
         eHealthBar.value = EnemyHealth;
 
-        playButtonText.text = (playing ? "Continue" : "Play");
+        playButtonText.text = (playing ? (Hand.Count > 0 ? "Continue" : "Next Round") : "Play");
 
         Mathf.Clamp(playerHealth, 0, 20);
         Mathf.Clamp(EnemyHealth, 0, 20);
@@ -231,14 +234,6 @@ public class Game : MonoBehaviour
                 }
             }
 
-            Debug.Log(atk);
-            Debug.Log(def);
-            Debug.Log(health);
-
-            Debug.Log(Eatk);
-            Debug.Log(Edef);
-            Debug.Log(Ehealth);
-
             int dmg = atk - Edef;
             if (dmg < 0)
             {
@@ -280,8 +275,14 @@ public class Game : MonoBehaviour
         EnemyLoc = new List<GameObject> { ELoc1, ELoc2 };
         PlayerLoc = new List<GameObject> { PLoc1, PLoc2 };
 
+        pHealthBar.maxValue = maxHealth;
+        eHealthBar.maxValue = maxHealth;
+
         playerHealth = maxHealth;
         EnemyHealth = maxHealth;
+
+        resetEnemyDeck();
+        resetPlayerDeck();
 
         drawCard(drawAmount);
         drawToEnemy(drawAmount);
@@ -317,6 +318,14 @@ public class Game : MonoBehaviour
             Destroy(pickCardsHolder.transform.GetChild(i).gameObject);
         }
 
+        if (Hand.Count == 0)
+        {
+            resetPlayerDeck();
+            resetEnemyDeck();
+            drawCard(3);
+            drawToEnemy(3);
+        }
+
         drawCard(2);
         drawToEnemy(2);
     }
@@ -325,11 +334,17 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            int index = Random.Range(1, database.GetComponent<Deck>().deck.Count);
-            int id = database.GetComponent<Deck>().deck[index];
-            GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, handHolder.transform);
-            Temp.GetComponent<CardDisplay>().id = id;
-            Temp.GetComponent<CardDisplay>().order = i;
+            if (pDeck.Count > 0)
+            {
+                int index = Random.Range(0, pDeck.Count);
+                Debug.Log(index);
+                Debug.Log(pDeck.Count);
+                int id = pDeck[index];
+                GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, handHolder.transform);
+                Temp.GetComponent<CardDisplay>().id = id;
+                Temp.GetComponent<CardDisplay>().order = i;
+                pDeck.Remove(id);
+            }
         }
     }
 
@@ -337,9 +352,13 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            int index = Random.Range(1, database.GetComponent<Deck>().deck.Count);
-            int id = database.GetComponent<Deck>().deck[index];
-            EHand.Add(id);
+            if (eDeck.Count > 0)
+            {
+                int index = Random.Range(0, eDeck.Count);
+                int id = eDeck[index];
+                EHand.Add(id);
+                eDeck.Remove(id);
+            }
         }
     }
 
@@ -363,4 +382,23 @@ public class Game : MonoBehaviour
         EHand.Add(id);
     }
 
+    public void resetPlayerDeck()
+    {
+        pDeck.Clear();
+        foreach (Card card in CardDatabase.cardList)
+        {
+            pDeck.Add(card.id);
+            pDeck.Add(card.id);
+        }
+    }
+
+    public void resetEnemyDeck()
+    {
+        eDeck.Clear();
+        foreach (Card card in CardDatabase.cardList)
+        {
+            eDeck.Add(card.id);
+            eDeck.Add(card.id);
+        }
+    }
 }

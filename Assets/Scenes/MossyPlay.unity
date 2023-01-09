@@ -206,15 +206,17 @@ MonoBehaviour:
   pickCardsHolder: {fileID: 1350810351}
   PickedLocation1: {fileID: 2086386151}
   PickedLocation2: {fileID: 521768710}
-  maxHealth: 20
-  playerHealth: 20
-  EnemyHealth: 20
+  maxHealth: 30
+  playerHealth: 30
+  EnemyHealth: 30
   pHealthBar: {fileID: 509244632}
   eHealthBar: {fileID: 132964637}
   pHealthText: {fileID: 1530060332}
   eHealthText: {fileID: 907237506}
   playing: 0
   playButtonText: {fileID: 1051798994}
+  pDeck: 
+  eDeck: 
 --- !u!4 &19311991
 Transform:
   m_ObjectHideFlags: 0
