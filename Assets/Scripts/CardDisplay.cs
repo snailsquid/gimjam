@@ -27,7 +27,7 @@ public class CardDisplay : MonoBehaviour
         // typeText.text = CardDatabase.cardList[id].type;
         // powerText.text = " " + CardDatabase.cardList[id].power;
 
-        gameObject.transform.Find("face").GetComponent<Renderer>().material.mainTexture = Resources.Load(CardDatabase.cardList[id].imgPath == "" ? defaultImgPath : CardDatabase.cardList[id].imgPath) as Texture; ;
+        //gameObject.transform.Find("face").GetComponent<Renderer>().material.mainTexture = Resources.Load(CardDatabase.cardList[id].imgPath == "" ? defaultImgPath : CardDatabase.cardList[id].imgPath) as Texture; ;
 
         gameObject.name = CardDatabase.cardList[id].cardName;
     }

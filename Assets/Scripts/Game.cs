@@ -72,14 +72,17 @@ public class Game : MonoBehaviour
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 0, 10 + (i * 0.1f)) + cardOffset;
+                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 10);
+                Hand[i].GetComponent<SpriteRenderer>().sortingOrder = -i;
             }
         }
         else
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 0, 10 + (i * 0.1f)) + cardOffset;
+                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 10);
+                Hand[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -i;
+                
             }
         }
         List<GameObject> _pickedCards = RaycastHolder.GetComponent<RaycastSelect>().pickedCards;
@@ -124,6 +127,7 @@ public class Game : MonoBehaviour
                 Temp.transform.parent = pickCardsHolder.transform;
                 foreach (Transform child in Temp.transform)
                 {
+                    Debug.Log("cccc");
                     if (i == 0)
                     {
                         child.GetComponent<Animator>().Play("PutInPicked", 0, 0.0f);
@@ -337,12 +341,10 @@ public class Game : MonoBehaviour
             if (pDeck.Count > 0)
             {
                 int index = Random.Range(0, pDeck.Count);
-                Debug.Log(index);
-                Debug.Log(pDeck.Count);
                 int id = pDeck[index];
-                GameObject Temp = Instantiate(CardTemplate, CardTemplate.transform.position, CardTemplate.transform.rotation, handHolder.transform);
-                Temp.GetComponent<CardDisplay>().id = id;
-                Temp.GetComponent<CardDisplay>().order = i;
+                GameObject Temp = Instantiate(CardTemplate, handHolder.transform);
+                Temp.transform.GetChild(0).GetComponent<CardDisplay>().id = id;
+                Temp.transform.GetChild(0).GetComponent<CardDisplay>().order = i;
                 pDeck.Remove(id);
             }
         }

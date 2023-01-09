@@ -34,6 +34,7 @@ public class RaycastSelect : MonoBehaviour
             unselectAnimator = _selection.parent.GetComponentsInChildren<Animator>();
             foreach (Animator animator in unselectAnimator)
             {
+                Debug.Log("aaaa");
                 animator.Play("UnselectCard", 0, 0.0f);
             }
             // selectionRenderer.material = defaultMaterial;
@@ -44,9 +45,10 @@ public class RaycastSelect : MonoBehaviour
     void Update()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
+        if (hit.collider!=null)
         {
+            Debug.Log("HIT!");
             var selection = hit.transform;
             var selectionRenderer = selection.GetComponent<Renderer>();
             if (selectionRenderer != null)
@@ -63,6 +65,7 @@ public class RaycastSelect : MonoBehaviour
                             // selectionRenderer.material = defaultMaterial;
                             foreach (Transform child in selection.parent)
                             {
+                                Debug.Log("bbb");
                                 child.GetComponent<Animator>().Play("ClickPick", 0, 0.0f);
                                 Debug.Log("before " + child.localPosition);
                                 child.localPosition = new Vector3(0, 0, 0);
@@ -81,19 +84,17 @@ public class RaycastSelect : MonoBehaviour
                 }
                 else
                 {
-                    if (_selection != null && selection.parent != null && _selection.GetComponent<Renderer>() != null && selectionRenderer.material != _selection.GetComponent<Renderer>().material && selection.CompareTag(selectableTag))
+                    Debug.Log("yas");
+                    Debug.Log(selection);
+                    if (_selection != null && selection.parent != null && selection != _selection && selection.CompareTag(selectableTag))
                     {
-                        selectAnimator = selection.parent.GetComponentsInChildren<Animator>();
-                        foreach (Animator animator in selectAnimator)
-                        {
-                            animator.Play("SelectCard", 0, 0.0f);
-                        }
+                        selection.GetComponent<Animator>().Play("SelectCard", 0, 0.0f);
+                        resetCard();
                     }
-                    resetCard();
                 }
+                _selection = selection;
             }
-            _selection = selection;
-        }
 
+        }
     }
 }
