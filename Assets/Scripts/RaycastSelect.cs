@@ -28,7 +28,7 @@ public class RaycastSelect : MonoBehaviour
 
     void resetCard()
     {
-        if (_selection != null && _selection.parent != null && _selection.GetComponent<Renderer>() != null&& _selection.CompareTag(selectableTag))
+        if (_selection != null && _selection.parent != null && _selection.GetComponent<Renderer>() != null && _selection.CompareTag(selectableTag))
         {
             var selectionRenderer = _selection.GetComponent<Renderer>();
             unselectAnimator = _selection.parent.GetComponentsInChildren<Animator>();
@@ -36,7 +36,7 @@ public class RaycastSelect : MonoBehaviour
             {
                 animator.Play("UnselectCard", 0, 0.0f);
             }
-            selectionRenderer.material = defaultMaterial;
+            // selectionRenderer.material = defaultMaterial;
         }
     }
 
@@ -56,11 +56,11 @@ public class RaycastSelect : MonoBehaviour
 
                     if (selection.CompareTag(selectableTag))
                     {
-                        selectionRenderer.material = highlightMaterial;
+                        // selectionRenderer.material = highlightMaterial;
 
                         if (Input.GetMouseButtonDown(0))
                         {
-                            selectionRenderer.material = defaultMaterial;
+                            // selectionRenderer.material = defaultMaterial;
                             foreach (Transform child in selection.parent)
                             {
                                 child.GetComponent<Animator>().Play("ClickPick", 0, 0.0f);
@@ -81,13 +81,13 @@ public class RaycastSelect : MonoBehaviour
                 }
                 else
                 {
-                    if (_selection != null && selection.parent != null && _selection.GetComponent<Renderer>() != null&& selectionRenderer.material != _selection.GetComponent<Renderer>().material&& selection.CompareTag(selectableTag))
+                    if (_selection != null && selection.parent != null && _selection.GetComponent<Renderer>() != null && selectionRenderer.material != _selection.GetComponent<Renderer>().material && selection.CompareTag(selectableTag))
                     {
-                            selectAnimator = selection.parent.GetComponentsInChildren<Animator>();
-                            foreach (Animator animator in selectAnimator)
-                            {
-                                animator.Play("SelectCard", 0, 0.0f);
-                            }
+                        selectAnimator = selection.parent.GetComponentsInChildren<Animator>();
+                        foreach (Animator animator in selectAnimator)
+                        {
+                            animator.Play("SelectCard", 0, 0.0f);
+                        }
                     }
                     resetCard();
                 }

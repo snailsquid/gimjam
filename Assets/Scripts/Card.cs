@@ -9,18 +9,19 @@ public class Card
     public string cardName;
     public string type;
     public int power;
+    public string imgPath;
 
     public Card()
     {
-        
+
     }
 
-    public Card(int Id, string CardName, string Type, int Power)
+    public Card(int Id, string CardName, string Type, int Power, string ImgPath)
     {
         id = Id;
         cardName = CardName;
         type = Type;
         power = Power;
-
+        imgPath = ImgPath;
     }
 }

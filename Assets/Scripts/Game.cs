@@ -17,7 +17,7 @@ public class Game : MonoBehaviour
     public List<int> EHand = new();
     public int drawAmount;
     public float cardGap;
-    public float cardOffset;
+    public Vector3 cardOffset;
     public GameObject database, handHolder;
 
     public GameObject PLoc1, PLoc2, ELoc1, ELoc2, CardTemplate;
@@ -69,14 +69,14 @@ public class Game : MonoBehaviour
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i) + cardOffset) * 1.0f + (cardGap / 2.0f), -15, 10 - (i * 0.01f));
+                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 0, 10 - (i * 0.1f)) + cardOffset;
             }
         }
         else
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i) + cardOffset, -15, 10 - (i * 0.01f));
+                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 0, 10 - (i * 0.1f)) + cardOffset;
             }
         }
         List<GameObject> _pickedCards = RaycastHolder.GetComponent<RaycastSelect>().pickedCards;
@@ -121,7 +121,7 @@ public class Game : MonoBehaviour
                 Temp.transform.parent = pickCardsHolder.transform;
                 foreach (Transform child in Temp.transform)
                 {
-                    if(i==0)
+                    if (i == 0)
                     {
                         child.GetComponent<Animator>().Play("PutInPicked", 0, 0.0f);
                     }
@@ -210,7 +210,7 @@ public class Game : MonoBehaviour
                 GameObject ETemp = Instantiate(CardTemplate, EnemyLoc[i].transform.position, EnemyLoc[i].transform.rotation, CardTemplate.transform.parent);
                 ETemp.GetComponent<CardDisplay>().id = id;
                 ETemp.GetComponent<CardDisplay>().order = i;
-                foreach(Transform child in ETemp.transform)
+                foreach (Transform child in ETemp.transform)
                 {
                     child.tag = "Enemy";
                 }
@@ -271,7 +271,6 @@ public class Game : MonoBehaviour
         }
     }
 
-    //kiigo was here
     public void startGame()
     {
         PickedLocations = new GameObject[2] { PickedLocation1, PickedLocation2 };
