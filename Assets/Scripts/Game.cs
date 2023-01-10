@@ -160,8 +160,8 @@ public class Game : MonoBehaviour
 
         playButtonText.text = (playing ? (Hand.Count > 0 ? "Continue" : "Next Round") : "Play");
 
-        Mathf.Clamp(playerHealth, 0, 20);
-        Mathf.Clamp(EnemyHealth, 0, 20);
+        playerHealth = Mathf.Clamp(playerHealth, 0, 30);
+        EnemyHealth = Mathf.Clamp(EnemyHealth, 0, 30);
     }
 
     public void playPicked()
@@ -180,6 +180,7 @@ public class Game : MonoBehaviour
             int Edef = 0;
             int Ehealth = 0;
 
+
             for (int i = 0; i < pickedCards.Count; i++)
             {
                 GameObject Temp = Instantiate(pickedCards[i], PlayerLoc[i].transform.position, PlayerLoc[i].transform.rotation);
@@ -193,18 +194,27 @@ public class Game : MonoBehaviour
                 string type = CardDatabase.cardList[id].type;
                 int power = CardDatabase.cardList[id].power;
                 Table.Add(Temp);
+
+
                 if (type == "Attack")
                 {
-                    atk = atk + power;
+                    atk += power;
                 }
                 else if (type == "Defense")
                 {
-                    def = def + power;
+                    def += power;
                 }
                 else if (type == "Health")
                 {
-                    health = health + power;
+                    health += power;
                 }
+                else if (type == "Powerup")
+                {
+                    if (atk > 0) atk += power;
+                    if (def > 0) def += power;
+                    if (health > 0) health += power;
+                }
+
             }
 
             for (int i = 0; i < Hand.Count; i++)
@@ -226,6 +236,7 @@ public class Game : MonoBehaviour
                 GameObject ETemp = Instantiate(CardTemplate, EnemyLoc[i].transform.position, EnemyLoc[i].transform.rotation, CardTemplate.transform.parent);
                 ETemp.transform.GetChild(0).GetComponent<CardDisplay>().id = id;
                 ETemp.transform.GetChild(0).GetComponent<CardDisplay>().order = i;
+                ETemp.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardimages[id];
                 foreach (Transform child in ETemp.transform)
                 {
                     child.tag = "Enemy";
@@ -233,17 +244,25 @@ public class Game : MonoBehaviour
                 EPickedCards.Add(ETemp);
                 string type = CardDatabase.cardList[id].type;
                 int power = CardDatabase.cardList[id].power;
+
+
                 if (type == "Attack")
                 {
-                    Eatk = Eatk + power;
+                    Eatk += power;
                 }
                 else if (type == "Defense")
                 {
-                    Edef = Edef + power;
+                    Edef += power;
                 }
                 else if (type == "Health")
                 {
-                    Ehealth = Ehealth + power;
+                    Ehealth += power;
+                }
+                else if (type == "Powerup")
+                {
+                    if (Eatk > 0) Eatk += power;
+                    if (Edef > 0) Edef += power;
+                    if (Ehealth > 0) Ehealth += power;
                 }
             }
 
@@ -415,4 +434,5 @@ public class Game : MonoBehaviour
             eDeck.Add(card.id);
         }
     }
+
 }
