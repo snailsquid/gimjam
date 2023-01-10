@@ -129,9 +129,8 @@ public class Game : MonoBehaviour
             for (int i = 0; i < _pickedCards.Count; i++)
             {
                 Debug.Log("cccc");
-                GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation);
+                GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation, pickCardsHolder.transform);
                 Temp.SetActive(true);
-                Temp.transform.parent = pickCardsHolder.transform;
                 foreach (Transform child in Temp.transform)
                 {
                     if (i == 0)
@@ -305,18 +304,18 @@ public class Game : MonoBehaviour
         PlayCam.gameObject.SetActive(false);
         PickCam.gameObject.SetActive(true);
 
-        for (int i = 0; i < pickCardsHolder.transform.childCount; i++)
+        for (int i = 0; i < pickedCards.Count; i++)
         {
-            Destroy(pickCardsHolder.transform.GetChild(i));
+            Destroy(pickedCards[i]);
         }
         pickedCards.Clear();
+        _pickedCards.Clear();
 
         for (int i = 0; i < EPickedCards.Count; i++)
         {
             Destroy(EPickedCards[i]);
         }
         EPickedCards.Clear();
-        RaycastHolder.GetComponent<RaycastSelect>().pickedCards.Clear();
 
         for (int i = 0; i < Table.Count; i++)
         {
@@ -324,9 +323,11 @@ public class Game : MonoBehaviour
         }
         EPickedCards.Clear();
 
-        for (int i = pickCardsHolder.transform.childCount - 1; i >= 0; i--)
+        Debug.Log(pickCardsHolder.transform.childCount);
+
+        foreach(Transform child in pickCardsHolder.transform)
         {
-            Destroy(pickCardsHolder.transform.GetChild(i).gameObject);
+            Destroy(child.gameObject);
         }
 
         if (Hand.Count == 0)
