@@ -57,9 +57,13 @@ public class Game : MonoBehaviour
         startGame();
     }
 
+    public List<GameObject> _pickedCards;
+
     // Update is called once per frame
     void Update()
     {
+
+        
         Hand.Clear();
         foreach (Transform child in handHolder.transform)
         {
@@ -73,7 +77,7 @@ public class Game : MonoBehaviour
             for (int i = 0; i < Hand.Count; i++)
             {
                 Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 10);
-                Hand[i].GetComponent<SpriteRenderer>().sortingOrder = -i;
+                Hand[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -i;
             }
         }
         else
@@ -85,7 +89,6 @@ public class Game : MonoBehaviour
                 
             }
         }
-        List<GameObject> _pickedCards = RaycastHolder.GetComponent<RaycastSelect>().pickedCards;
         if (pickedCards.Any())
         {
             if (pickedCards.Count == _pickedCards.Count)
@@ -120,14 +123,17 @@ public class Game : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
+            if (_pickedCards.Count <= 2)
+            {
+
             for (int i = 0; i < _pickedCards.Count; i++)
             {
+                Debug.Log("cccc");
                 GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation);
                 Temp.SetActive(true);
                 Temp.transform.parent = pickCardsHolder.transform;
                 foreach (Transform child in Temp.transform)
                 {
-                    Debug.Log("cccc");
                     if (i == 0)
                     {
                         child.GetComponent<Animator>().Play("PutInPicked", 0, 0.0f);
@@ -140,6 +146,7 @@ public class Game : MonoBehaviour
                     child.localPosition = new Vector3(0, 0, 0);
                     child.tag = "Picked";
                 }
+            }
             }
             pickedCards = new List<GameObject>(_pickedCards);
             same = true;
@@ -180,7 +187,7 @@ public class Game : MonoBehaviour
                 {
                     child.tag = "Playing";
                 }
-                int id = Temp.GetComponent<CardDisplay>().id;
+                int id = Temp.transform.GetChild(0).GetComponent<CardDisplay>().id;
                 string type = CardDatabase.cardList[id].type;
                 int power = CardDatabase.cardList[id].power;
                 Table.Add(Temp);
@@ -215,8 +222,8 @@ public class Game : MonoBehaviour
                 int id = EHand[index];
                 removeFromEnemyHand(id);
                 GameObject ETemp = Instantiate(CardTemplate, EnemyLoc[i].transform.position, EnemyLoc[i].transform.rotation, CardTemplate.transform.parent);
-                ETemp.GetComponent<CardDisplay>().id = id;
-                ETemp.GetComponent<CardDisplay>().order = i;
+                ETemp.transform.GetChild(0).GetComponent<CardDisplay>().id = id;
+                ETemp.transform.GetChild(0).GetComponent<CardDisplay>().order = i;
                 foreach (Transform child in ETemp.transform)
                 {
                     child.tag = "Enemy";
@@ -298,9 +305,9 @@ public class Game : MonoBehaviour
         PlayCam.gameObject.SetActive(false);
         PickCam.gameObject.SetActive(true);
 
-        for (int i = 0; i < pickedCards.Count; i++)
+        for (int i = 0; i < pickCardsHolder.transform.childCount; i++)
         {
-            Destroy(pickedCards[i]);
+            Destroy(pickCardsHolder.transform.GetChild(i));
         }
         pickedCards.Clear();
 

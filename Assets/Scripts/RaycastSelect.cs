@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 public class RaycastSelect : MonoBehaviour
@@ -45,8 +40,8 @@ public class RaycastSelect : MonoBehaviour
     void Update()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
-        if (hit.collider!=null)
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.up));
+        if (hit.collider != null)
         {
             Debug.Log("HIT!");
             var selection = hit.transform;
