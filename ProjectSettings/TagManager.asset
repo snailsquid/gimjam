@@ -8,6 +8,7 @@ TagManager:
   - Picked
   - Enemy
   - Playing
+  - ScreenShake
   layers:
   - Default
   - TransparentFX

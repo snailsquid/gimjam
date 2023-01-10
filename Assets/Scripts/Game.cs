@@ -51,6 +51,8 @@ public class Game : MonoBehaviour
     public List<int> pDeck = new();
     public List<int> eDeck = new();
 
+    public List<Sprite> cardimages = new();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -130,8 +132,9 @@ public class Game : MonoBehaviour
             {
                 Debug.Log("cccc");
                 GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation, pickCardsHolder.transform);
-                Temp.SetActive(true);
-                foreach (Transform child in Temp.transform)
+                    Temp.SetActive(true);
+                    Debug.Log("hhh");
+                    foreach (Transform child in Temp.transform)
                 {
                     if (i == 0)
                     {
@@ -353,6 +356,7 @@ public class Game : MonoBehaviour
                 GameObject Temp = Instantiate(CardTemplate, handHolder.transform);
                 Temp.transform.GetChild(0).GetComponent<CardDisplay>().id = id;
                 Temp.transform.GetChild(0).GetComponent<CardDisplay>().order = i;
+                Temp.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardimages[id];
                 pDeck.Remove(id);
             }
         }

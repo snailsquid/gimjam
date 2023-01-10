@@ -5,6 +5,7 @@ using UnityEngine;
 public class CardDatabase : MonoBehaviour
 {
     public static List<Card> cardList = new();
+    public List<Sprite> cardImages = new();
 
     public void Awake()
     {
@@ -33,7 +34,7 @@ public class CardDatabase : MonoBehaviour
         cardList.Add(new Card(20, "Think Mark", "Defense", 4, "Images/Card/ThinkMark"));
         cardList.Add(new Card(21, "Trust", "Defense", 5, "Images/Card/Trust"));
         cardList.Add(new Card(22, "The One Piece Is Real", "Defense", 3, "Images/Card/TheOnePieceIsReal"));
-        cardList.Add(new Card(23, "Andrew Tate", "Defense", 4, "Images/CardAndrewTate"));
+        cardList.Add(new Card(23, "Andrew Tate", "Defense", 4, "Images/Card/AndrewTate"));
 
         cardList.Add(new Card(24, "Sparks Joy", "Powerup", 4, "Images/Card/SparksJoy"));
         cardList.Add(new Card(25, "Gus", "Powerup", 5, "Images/Card/Gus"));
