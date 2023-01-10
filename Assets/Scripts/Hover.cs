@@ -13,6 +13,15 @@ public class Hover : MonoBehaviour
 
     public GameObject GameScript;
 
+    public Camera pickCam;
+
+    private Shake shake;
+
+    private void Start()
+    {
+        shake = GameObject.FindGameObjectWithTag("ScreenShake").GetComponent<Shake>();
+    }
+
     private void OnMouseExit()
     {
         if (gameObject.transform.CompareTag(selectableTag))
@@ -20,7 +29,6 @@ public class Hover : MonoBehaviour
             unselectAnimator = gameObject.transform.parent.GetComponentsInChildren<Animator>();
             foreach (Animator animator in unselectAnimator)
             {
-                Debug.Log("aaaa");
                 animator.Play("UnselectCard", 0, 0.0f);
             }
         }
@@ -32,20 +40,12 @@ public class Hover : MonoBehaviour
         if (selection.CompareTag(selectableTag))
         {
 
-        foreach (Transform child in selection.parent)
-        {
-            child.GetComponent<Animator>().Play("ClickPick", 0, 0.0f);
-            child.localPosition = new Vector3(0, 0, 0);
-        }
         if (GameScript.GetComponent<Game>()._pickedCards.Count >= 2)
         {
-            Debug.Log("bigg");
             GameScript.GetComponent<Game>()._pickedCards[0].SetActive(true);
             GameScript.GetComponent<Game>()._pickedCards.RemoveAt(0);
         }
-
         GameScript.GetComponent<Game>()._pickedCards.Add(selection.parent.gameObject);
-
         selection.parent.gameObject.SetActive(false);
         }
     }

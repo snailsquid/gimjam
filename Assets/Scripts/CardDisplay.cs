@@ -14,12 +14,6 @@ public class CardDisplay : MonoBehaviour
 
     private static string defaultImgPath = "Images/placeholder";
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     //Refresh the texts
     void Update()
     {
