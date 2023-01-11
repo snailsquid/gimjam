@@ -65,7 +65,7 @@ public class Game : MonoBehaviour
     void Update()
     {
 
-        
+
         Hand.Clear();
         foreach (Transform child in handHolder.transform)
         {
@@ -88,7 +88,7 @@ public class Game : MonoBehaviour
             {
                 Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 10);
                 Hand[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -i;
-                
+
             }
         }
         if (pickedCards.Any())
@@ -128,27 +128,27 @@ public class Game : MonoBehaviour
             if (_pickedCards.Count <= 2)
             {
 
-            for (int i = 0; i < _pickedCards.Count; i++)
-            {
-                Debug.Log("cccc");
-                GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation, pickCardsHolder.transform);
+                for (int i = 0; i < _pickedCards.Count; i++)
+                {
+                    Debug.Log("cccc");
+                    GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation, pickCardsHolder.transform);
                     Temp.SetActive(true);
                     Debug.Log("hhh");
                     foreach (Transform child in Temp.transform)
-                {
-                    if (i == 0)
                     {
-                        child.GetComponent<Animator>().Play("PutInPicked", 0, 0.0f);
-                    }
-                    else
-                    {
-                        child.GetComponent<Animator>().Play("PutInPicked2", 0, 0.0f);
+                        if (i == 0)
+                        {
+                            child.GetComponent<Animator>().Play("PutInPicked", 0, 0.0f);
+                        }
+                        else
+                        {
+                            child.GetComponent<Animator>().Play("PutInPicked2", 0, 0.0f);
 
+                        }
+                        child.localPosition = new Vector3(0, 0, 0);
+                        child.tag = "Picked";
                     }
-                    child.localPosition = new Vector3(0, 0, 0);
-                    child.tag = "Picked";
                 }
-            }
             }
             pickedCards = new List<GameObject>(_pickedCards);
             same = true;
@@ -180,6 +180,8 @@ public class Game : MonoBehaviour
             int Edef = 0;
             int Ehealth = 0;
 
+            int? pPlayed = null;
+            int? ePlayed = null;
 
             for (int i = 0; i < pickedCards.Count; i++)
             {
@@ -195,18 +197,39 @@ public class Game : MonoBehaviour
                 int power = CardDatabase.cardList[id].power;
                 Table.Add(Temp);
 
+                int addition = 0;
+
+                if (i == 0)
+                {
+                    pPlayed = id;
+                }
+                else if (i == 1 && pPlayed == id)
+                {
+                    addition = 4;
+                }
+
+                if ((id == 9 && pPlayed == 15) || (id == 15 && pPlayed == 9))
+                {
+                    addition = 8;
+                }
+
+                if ((id == 1 && pPlayed == 17) || (id == 17 && pPlayed == 1))
+                {
+                    atk += 4;
+                    def += 4;
+                }
 
                 if (type == "Attack")
                 {
-                    atk += power;
+                    atk += power + addition;
                 }
                 else if (type == "Defense")
                 {
-                    def += power;
+                    def += power + addition;
                 }
                 else if (type == "Health")
                 {
-                    health += power;
+                    health += power + addition;
                 }
                 else if (type == "Powerup")
                 {
@@ -245,18 +268,39 @@ public class Game : MonoBehaviour
                 string type = CardDatabase.cardList[id].type;
                 int power = CardDatabase.cardList[id].power;
 
+                int addition = 0;
+
+                if (i == 0)
+                {
+                    ePlayed = id;
+                }
+                else if (i == 1 && pPlayed == id)
+                {
+                    addition = 4;
+                }
+
+                if ((id == 9 && pPlayed == 15) || (id == 15 && pPlayed == 9))
+                {
+                    addition = 8;
+                }
+
+                if ((id == 1 && pPlayed == 17) || (id == 17 && pPlayed == 1))
+                {
+                    Eatk += 4;
+                    Edef += 4;
+                }
 
                 if (type == "Attack")
                 {
-                    Eatk += power;
+                    Eatk += power + addition;
                 }
                 else if (type == "Defense")
                 {
-                    Edef += power;
+                    Edef += power + addition;
                 }
                 else if (type == "Health")
                 {
-                    Ehealth += power;
+                    Ehealth += power + addition;
                 }
                 else if (type == "Powerup")
                 {
@@ -265,6 +309,10 @@ public class Game : MonoBehaviour
                     if (Ehealth > 0) Ehealth += power;
                 }
             }
+
+            Debug.Log(atk);
+            Debug.Log(def);
+            Debug.Log(health);
 
             int dmg = atk - Edef;
             if (dmg < 0)
@@ -347,7 +395,7 @@ public class Game : MonoBehaviour
 
         Debug.Log(pickCardsHolder.transform.childCount);
 
-        foreach(Transform child in pickCardsHolder.transform)
+        foreach (Transform child in pickCardsHolder.transform)
         {
             Destroy(child.gameObject);
         }
