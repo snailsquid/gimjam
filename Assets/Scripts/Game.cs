@@ -7,11 +7,16 @@ using UnityEngine.UI;
 using System.Linq;
 using Unity.VisualScripting;
 using TMPro;
+using UnityEditorInternal;
 
 public class Game : MonoBehaviour
 {
     //* (Without Anything)/P = Player
     //* E = Enemy
+
+    public GameObject particleManager;
+    private Color green = new(0.7f, 1f, 0.1275f,1);
+    private Color red = new(255, 20, 20, 1);
 
     public List<GameObject> Hand = new();
     public List<int> EHand = new();
@@ -33,9 +38,10 @@ public class Game : MonoBehaviour
     public bool same = true;
     public GameObject RaycastHolder, pickCardsHolder;
     public GameObject PickedLocation1, PickedLocation2;
+    public GameObject PlayPicked;
     private GameObject[] PickedLocations;
 
-    public int maxHealth = 20;
+    public int maxHealth;
 
     public int playerHealth;
     public int EnemyHealth;
@@ -52,6 +58,10 @@ public class Game : MonoBehaviour
     public List<int> eDeck = new();
 
     public List<Sprite> cardimages = new();
+    public Sprite cardBackground;
+
+    public GameObject audioManager;
+    private AudioManager AudioManager;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +70,9 @@ public class Game : MonoBehaviour
     }
 
     public List<GameObject> _pickedCards;
+    private float time;
+
+    private float lerpSpeed = 0.25f;  
 
     // Update is called once per frame
     void Update()
@@ -153,24 +166,38 @@ public class Game : MonoBehaviour
             pickedCards = new List<GameObject>(_pickedCards);
             same = true;
         }
-        pHealthText.text = playerHealth + "/" + maxHealth;
-        eHealthText.text = EnemyHealth + "/" + maxHealth;
-        pHealthBar.value = playerHealth;
+
+
+        pHealthText.text = playerHealth/10 + "/" + maxHealth/10;
+        eHealthText.text = EnemyHealth/10 + "/" + maxHealth / 10;
+        time += Time.deltaTime * lerpSpeed;
+        pHealthBar.value = Mathf.Lerp(pHealthBar.value, playerHealth, time);
         eHealthBar.value = EnemyHealth;
 
         playButtonText.text = (playing ? (Hand.Count > 0 ? "Continue" : "Next Round") : "Play");
 
-        playerHealth = Mathf.Clamp(playerHealth, 0, 30);
-        EnemyHealth = Mathf.Clamp(EnemyHealth, 0, 30);
+        playerHealth = Mathf.Clamp(playerHealth, 0, 300);
+        EnemyHealth = Mathf.Clamp(EnemyHealth, 0, 300);
     }
 
     public void playPicked()
     {
+        foreach (Transform child in pickCardsHolder.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Transform parent in handHolder.transform)
+        {
+            foreach (Transform child in parent)
+            {
+                child.tag = "Unplaying";
+            }
+        }
+
         if (pickedCards.Count == 2)
         {
             playing = true;
-            PickCam.gameObject.SetActive(false);
-            PlayCam.gameObject.SetActive(true);
 
             int atk = 0;
             int def = 0;
@@ -190,6 +217,7 @@ public class Game : MonoBehaviour
                 Temp.tag = "Playing";
                 foreach (Transform child in Temp.transform)
                 {
+                    child.GetComponent<Animator>().Play("TransitionToPlay");
                     child.tag = "Playing";
                 }
                 int id = Temp.transform.GetChild(0).GetComponent<CardDisplay>().id;
@@ -237,6 +265,7 @@ public class Game : MonoBehaviour
                     if (def > 0) def += power;
                     if (health > 0) health += power;
                 }
+                time = 0;
 
             }
 
@@ -258,7 +287,12 @@ public class Game : MonoBehaviour
                 GameObject ETemp = Instantiate(CardTemplate, EnemyLoc[i].transform.position, EnemyLoc[i].transform.rotation, CardTemplate.transform.parent);
                 ETemp.transform.GetChild(0).GetComponent<CardDisplay>().id = id;
                 ETemp.transform.GetChild(0).GetComponent<CardDisplay>().order = i;
-                ETemp.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardimages[id];
+                ETemp.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardBackground;
+                foreach (Transform child in ETemp.transform)
+                {
+                    child.GetComponent<Animator>().Play("EnemyToPlay");
+                    child.tag = "Playing";
+                }
                 foreach (Transform child in ETemp.transform)
                 {
                     child.tag = "Enemy";
@@ -307,6 +341,7 @@ public class Game : MonoBehaviour
                     if (Edef > 0) Edef += power;
                     if (Ehealth > 0) Ehealth += power;
                 }
+                time = 0;
             }
 
             Debug.Log(atk);
@@ -314,21 +349,39 @@ public class Game : MonoBehaviour
             Debug.Log(health);
 
             int dmg = atk - Edef;
+            int Edmg = Eatk - def;
             if (dmg < 0)
             {
                 dmg = 0;
+                Edmg += dmg;
             }
-            int Eheal = Ehealth - dmg;
-
-            int Edmg = Eatk - def;
             if (Edmg < 0)
             {
                 Edmg = 0;
+                dmg += Edmg;
             }
+            int Eheal = Ehealth - dmg;
+
             int heal = health - Edmg;
 
-            playerHealth += heal;
-            EnemyHealth += Eheal;
+            if (heal > 0)
+            {
+                particleManager.GetComponent<ParticleManager>().PlayerSpawn(green);
+            }else if (heal < 0)
+            {
+                particleManager.GetComponent<ParticleManager>().PlayerSpawn(red);
+            }
+            if (Eheal > 0)
+            {
+                particleManager.GetComponent<ParticleManager>().EnemySpawn(green);
+            }
+            else if (Eheal < 0)
+            {
+                particleManager.GetComponent<ParticleManager>().EnemySpawn(red);
+            }
+
+            playerHealth += heal*10;
+            EnemyHealth += Eheal*10;
 
         }
     }
@@ -347,9 +400,10 @@ public class Game : MonoBehaviour
 
     public void startGame()
     {
+        AudioManager = audioManager.GetComponent<AudioManager>();
+        AudioManager.PlayMusic();
+
         PickedLocations = new GameObject[2] { PickedLocation1, PickedLocation2 };
-        PlayCam.gameObject.SetActive(false);
-        PickCam.gameObject.SetActive(true);
 
         EnemyLoc = new List<GameObject> { ELoc1, ELoc2 };
         PlayerLoc = new List<GameObject> { PLoc1, PLoc2 };
@@ -370,10 +424,16 @@ public class Game : MonoBehaviour
     public void nextRound()
     {
         playing = false;
-        PlayCam.gameObject.SetActive(false);
-        PickCam.gameObject.SetActive(true);
+        foreach (Transform parent in handHolder.transform)
+        {
+            foreach(Transform child in parent)
+            {
 
-        for (int i = 0; i < pickedCards.Count; i++)
+                child.tag = "Selectable";
+            }
+        }
+
+        for (int i = 0; i < pickedCards.    Count; i++)
         {
             Destroy(pickedCards[i]);
         }
@@ -394,10 +454,7 @@ public class Game : MonoBehaviour
 
         Debug.Log(pickCardsHolder.transform.childCount);
 
-        foreach (Transform child in pickCardsHolder.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        
 
         if (Hand.Count == 0)
         {

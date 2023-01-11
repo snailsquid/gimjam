@@ -6,6 +6,8 @@ public class CardDatabase : MonoBehaviour
 {
     public static List<Card> cardList = new();
     public List<Sprite> cardImages = new();
+    public List<AudioClip> cardAudios= new();
+    public AudioClip background;
 
     public void Awake()
     {

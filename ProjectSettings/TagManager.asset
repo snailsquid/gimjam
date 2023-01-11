@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Playing
   - ScreenShake
+  - Unplaying
   layers:
   - Default
   - TransparentFX

@@ -54,13 +54,10 @@ public class Hover : MonoBehaviour
     {
         if (gameObject.transform.CompareTag(selectableTag))
         {
-
-        GameObject hit = gameObject;
+            GameObject hit = gameObject;
             var selection = hit.transform;
             selection.GetComponent<Animator>().Play("SelectCard", 0, 0.0f);
-                _selection = selection;
-            
-
+            _selection = selection;
         }
         }
     }
