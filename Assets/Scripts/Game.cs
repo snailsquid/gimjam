@@ -78,7 +78,7 @@ public class Game : MonoBehaviour
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 10);
+                Hand[i].transform.position = new Vector3((Hand.Count / 2 * -cardGap + (cardGap * i)) * 1.0f + (cardGap / 2.0f), 8);
                 Hand[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -i;
             }
         }
@@ -86,7 +86,7 @@ public class Game : MonoBehaviour
         {
             for (int i = 0; i < Hand.Count; i++)
             {
-                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 10);
+                Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 8);
                 Hand[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -i;
 
             }
