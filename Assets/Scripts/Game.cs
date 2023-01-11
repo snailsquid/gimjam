@@ -250,11 +250,10 @@ public class Game : MonoBehaviour
                 }
             }
 
-            // Ai for now only pick random cards
+            List<int> Decision = Ai.Decide(EnemyHealth, EHand);
             for (int i = 0; i < 2; i++)
             {
-                int index = Random.Range(0, EHand.Count);
-                int id = EHand[index];
+                int id = Decision[i];
                 removeFromEnemyHand(id);
                 GameObject ETemp = Instantiate(CardTemplate, EnemyLoc[i].transform.position, EnemyLoc[i].transform.rotation, CardTemplate.transform.parent);
                 ETemp.transform.GetChild(0).GetComponent<CardDisplay>().id = id;
