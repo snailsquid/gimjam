@@ -16,6 +16,11 @@ public class Game : MonoBehaviour
 
     private int heal, Eheal;
 
+    public GameObject pProfile, eProfile;
+    public Sprite sideRed, sideBlue;
+
+    public Scene win, lose, draw, home, choose;
+
     public GameObject midText;
 
     public GameObject floatingText;
@@ -147,7 +152,6 @@ public class Game : MonoBehaviour
 
                 for (int i = 0; i < _pickedCards.Count; i++)
                 {
-                    midText.SetActive(true);
 
                     GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation, pickCardsHolder.transform);
                     Temp.SetActive(true);
@@ -183,12 +187,22 @@ public class Game : MonoBehaviour
 
         playerHealth = Mathf.Clamp(playerHealth, 0, 300);
         EnemyHealth = Mathf.Clamp(EnemyHealth, 0, 300);
+
+        if (pHealthBar.value <= 0 && eHealthBar.value <= 0)
+        {
+            SceneManager.LoadScene("Draw");
+        }else if(pHealthBar.value <= 0)
+        {
+            SceneManager.LoadScene("Lose");
+        }
+        else if(eHealthBar.value <= 0)
+        {
+            SceneManager.LoadScene("Win");
+        }
     }
 
     public void playPicked()
     {
-        midText.SetActive(true);
-        midText.GetComponent<TextMesh>().text = "VS";
         if (pickedCards.Count == 2)
         {
         foreach (Transform child in pickCardsHolder.transform)
@@ -216,6 +230,9 @@ public class Game : MonoBehaviour
 
             int? pPlayed = null;
             int? ePlayed = null;
+
+            int pLeftPowerup = 0;
+            int eLeftPowerup = 0;
 
             for (int i = 0; i < pickedCards.Count; i++)
             {
@@ -256,21 +273,22 @@ public class Game : MonoBehaviour
 
                 if (type == "Attack")
                 {
-                    atk += power + addition;
+                    atk += power + addition + pLeftPowerup;
                 }
                 else if (type == "Defense")
                 {
-                    def += power + addition;
+                    def += power + addition + pLeftPowerup;
                 }
                 else if (type == "Health")
                 {
-                    health += power + addition;
+                    health += power + addition + pLeftPowerup;
                 }
                 else if (type == "Powerup")
                 {
                     if (atk > 0) atk += power;
                     if (def > 0) def += power;
                     if (health > 0) health += power;
+                    pLeftPowerup = power;
                 }
                 time = 0;
 
@@ -333,21 +351,22 @@ public class Game : MonoBehaviour
 
                 if (type == "Attack")
                 {
-                    Eatk += power + addition;
+                    Eatk += power + addition + eLeftPowerup;
                 }
                 else if (type == "Defense")
                 {
-                    Edef += power + addition;
+                    Edef += power + addition + eLeftPowerup;
                 }
                 else if (type == "Health")
                 {
-                    Ehealth += power + addition;
+                    Ehealth += power + addition + eLeftPowerup;
                 }
                 else if (type == "Powerup")
                 {
                     if (Eatk > 0) Eatk += power;
                     if (Edef > 0) Edef += power;
                     if (Ehealth > 0) Ehealth += power;
+                    eLeftPowerup = power;
                 }
                 time = 0;
             }
@@ -356,8 +375,19 @@ public class Game : MonoBehaviour
             Debug.Log(def);
             Debug.Log(health);
 
-            int dmg = atk - Edef;
-            int Edmg = Eatk - def;
+            int dmg = 0;
+            int Edmg = 0;
+            if(atk> 0) 
+            {
+                dmg = atk - Edef;
+            }
+            if (Eatk > 0)
+            {
+
+                Edmg = Eatk - def;
+            }
+            Debug.Log("Dmg : " + dmg);
+            Debug.Log("EDmg : " + Edmg);
             if (dmg < 0)
             {
                 Edmg += dmg;
@@ -371,9 +401,10 @@ public class Game : MonoBehaviour
              Eheal = Ehealth - dmg;
 
              heal = health - Edmg;
+            Debug.Log("EHeal : " + Eheal);
+            Debug.Log("heal : " + heal);
+            startCoroutine();
 
-            
-            
         }
     }
 
@@ -387,7 +418,7 @@ public class Game : MonoBehaviour
         else if (heal < 0)
         {
             particleManager.GetComponent<ParticleManager>().PlayerSpawn(red);
-            floatingText.GetComponent<FloatingText>().PlayerHealth(red, "-" + heal.ToString());
+            floatingText.GetComponent<FloatingText>().PlayerHealth(red, heal.ToString());
         }
         if (Eheal > 0)
         {
@@ -397,11 +428,16 @@ public class Game : MonoBehaviour
         else if (Eheal < 0)
         {
             particleManager.GetComponent<ParticleManager>().EnemySpawn(red);
-            floatingText.GetComponent<FloatingText>().EnemyHealth(red, "-" + Eheal.ToString());
+            floatingText.GetComponent<FloatingText>().EnemyHealth(red, Eheal.ToString());
         }
 
         playerHealth += heal * 10;
         EnemyHealth += Eheal * 10;
+
+        Debug.Log("Health = " + playerHealth);
+        Debug.Log("EHealth = " + EnemyHealth);
+
+        
     }
 
     public void play()
@@ -418,6 +454,39 @@ public class Game : MonoBehaviour
 
     public void startGame()
     {
+        if (PlayerPrefs.GetString("Side") == "Red")
+        {
+            pProfile.GetComponent<Image>().sprite = sideRed;
+            eProfile.GetComponent<Image>().sprite = sideBlue;
+            pProfile.transform.transform.eulerAngles = new Vector3(0, 0, 0);
+            eProfile.transform.transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+        else if (PlayerPrefs.GetString("Side") == "Blue")
+        {
+            pProfile.GetComponent<Image>().sprite = sideBlue;
+            eProfile.GetComponent<Image>().sprite = sideRed;
+            pProfile.transform.transform.eulerAngles = new Vector3(0, 180, 0);
+            eProfile.transform.transform.eulerAngles = new Vector3(0, 180, 0);
+        }
+
+        for (int i = 0; i < pickedCards.Count; i++)
+        {
+            Destroy(pickedCards[i]);
+        }
+        pickedCards.Clear();
+        _pickedCards.Clear();
+
+        for (int i = 0; i < EPickedCards.Count; i++)
+        {
+            Destroy(EPickedCards[i]);
+        }
+        EPickedCards.Clear();
+
+        for (int i = 0; i < Table.Count; i++)
+        {
+            Destroy(Table[i]);
+        }
+        EPickedCards.Clear();
         AudioManager = audioManager.GetComponent<AudioManager>();
         AudioManager.PlayMusic();
 
@@ -439,10 +508,20 @@ public class Game : MonoBehaviour
         drawToEnemy(drawAmount);
     }
 
+
+        IEnumerator waitCoroutine()
+        {
+            yield return new WaitForSeconds(1);
+            damage();
+        }
+
+    void startCoroutine()
+    {
+        StartCoroutine(waitCoroutine());
+    }
+
     public void nextRound()
     {
-        midText.SetActive(false);
-        midText.GetComponent<TextMesh>().text = "+";
 
         playing = false;
         foreach (Transform parent in handHolder.transform)

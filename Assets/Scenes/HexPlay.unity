@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2225,7 +2225,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.489
+  m_Volume: 0.07
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8524,7 +8524,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -86.7, y: 50}
-  m_SizeDelta: {x: 83.85, y: 30}
+  m_SizeDelta: {x: 150, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1462208991
 MonoBehaviour:
@@ -15033,6 +15033,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a735edf3f060e4dacadbca67557f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pProfile: {fileID: 1824080102}
+  eProfile: {fileID: 960980245}
+  sideRed: {fileID: 21300000, guid: 429a5a5334667404497dfcb33ce3067f, type: 3}
+  sideBlue: {fileID: 21300000, guid: da258699d7f02134fba5c15d613fcfc8, type: 3}
+  win:
+    m_Handle: 0
+  lose:
+    m_Handle: 0
+  draw:
+    m_Handle: 0
+  home:
+    m_Handle: 0
+  choose:
+    m_Handle: 0
   midText: {fileID: 1379889542}
   floatingText: {fileID: 1780172930}
   particleManager: {fileID: 1344801700}

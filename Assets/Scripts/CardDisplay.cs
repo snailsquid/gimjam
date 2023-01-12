@@ -36,6 +36,5 @@ public class CardDisplay : MonoBehaviour
 
     void onFinish()
     {
-        game.GetComponent<Game>().damage();
     }
 }

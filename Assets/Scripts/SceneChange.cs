@@ -12,6 +12,7 @@ public class SceneChange : MonoBehaviour
     private int index = 0;
     public GameObject notLoading;
     public GameObject Loading;
+    public AudioSource audio;
     // Start is called before the first frame update
     IEnumerator LoadSceneAsync(string Scene)
     {
@@ -23,7 +24,7 @@ public class SceneChange : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Scene);
 
         // Wait until the asynchronous scene fully loads
-        while (!asyncLoad.isDone)
+        while (!asyncLoad.isDone&&audio.isPlaying==false)
         {
             if (index >= 5) index = 0;
             image.sprite = LoadingImg[index];
@@ -33,6 +34,7 @@ public class SceneChange : MonoBehaviour
     }
     public void StartGame(string side)
     {
+        audio.loop = false;
         notLoading.SetActive(false);
         Loading.SetActive(true);
         PlayerPrefs.SetString("Side", side);
