@@ -2,10 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class SceneChange : MonoBehaviour
 {
+    public List<Sprite> LoadingImg;
+    public Image image;
+    private int index = 0;
+    public GameObject notLoading;
+    public GameObject Loading;
     // Start is called before the first frame update
     IEnumerator LoadSceneAsync(string Scene)
     {
@@ -19,11 +25,16 @@ public class SceneChange : MonoBehaviour
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
         {
-            yield return null;
+            if (index >= 5) index = 0;
+            image.sprite = LoadingImg[index];
+            index += 1;
+            yield return new WaitForSeconds(1f);
         }
     }
     public void StartGame(string side)
     {
+        notLoading.SetActive(false);
+        Loading.SetActive(true);
         PlayerPrefs.SetString("Side", side);
         StartCoroutine(LoadSceneAsync("HexPlay"));
     }
