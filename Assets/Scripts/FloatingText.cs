@@ -17,4 +17,10 @@ public class FloatingText : MonoBehaviour
         floating.transform.GetChild(0).GetComponent<TextMesh>().text = text;
         floating.transform.GetChild(0).GetComponent<TextMesh>().color = color;
     }
+
+    public void Combo(string text)
+    {
+        var combo = Instantiate(healthModText, eLoc.transform);
+        combo.transform.GetChild(0).GetComponent<TextMesh>().text = text;
+    }
 }

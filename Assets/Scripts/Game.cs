@@ -14,6 +14,10 @@ public class Game : MonoBehaviour
     //* (Without Anything)/P = Player
     //* E = Enemy
 
+    private int heal, Eheal;
+
+    public GameObject midText;
+
     public GameObject floatingText;
 
     public GameObject particleManager;
@@ -89,6 +93,7 @@ public class Game : MonoBehaviour
                 Hand.Add(child.gameObject);
             }
         }
+
         if (Hand.Count % 2 == 0)
         {
             for (int i = 0; i < Hand.Count; i++)
@@ -103,9 +108,9 @@ public class Game : MonoBehaviour
             {
                 Hand[i].transform.position = new Vector3((Hand.Count - 1) / 2 * -cardGap + (cardGap * i), 8);
                 Hand[i].transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -i;
-
             }
         }
+
         if (pickedCards.Any())
         {
             if (pickedCards.Count == _pickedCards.Count)
@@ -125,12 +130,9 @@ public class Game : MonoBehaviour
                 same = false;
             }
         }
-        else
+        else if(_pickedCards.Any())
         {
-            if (_pickedCards.Any())
-            {
-                same = false;
-            }
+            same = false;
         }
 
         if (!same)
@@ -145,10 +147,10 @@ public class Game : MonoBehaviour
 
                 for (int i = 0; i < _pickedCards.Count; i++)
                 {
-                    Debug.Log("cccc");
+                    midText.SetActive(true);
+
                     GameObject Temp = Instantiate(_pickedCards[i], PickedLocations[i].transform.position, _pickedCards[i].transform.rotation, pickCardsHolder.transform);
                     Temp.SetActive(true);
-                    Debug.Log("hhh");
                     foreach (Transform child in Temp.transform)
                     {
                         if (i == 0)
@@ -162,6 +164,7 @@ public class Game : MonoBehaviour
                         }
                         child.localPosition = new Vector3(0, 0, 0);
                         child.tag = "Picked";
+                        audioManager.GetComponent<AudioManager>().PlaySFX(child.GetComponent<CardDisplay>().id);
                     }
                 }
             }
@@ -184,6 +187,8 @@ public class Game : MonoBehaviour
 
     public void playPicked()
     {
+        midText.SetActive(true);
+        midText.GetComponent<TextMesh>().text = "VS";
         if (pickedCards.Count == 2)
         {
         foreach (Transform child in pickCardsHolder.transform)
@@ -317,6 +322,7 @@ public class Game : MonoBehaviour
                 if ((id == 9 && pPlayed == 15) || (id == 15 && pPlayed == 9))
                 {
                     addition = 8;
+
                 }
 
                 if ((id == 1 && pPlayed == 17) || (id == 17 && pPlayed == 1))
@@ -362,34 +368,40 @@ public class Game : MonoBehaviour
                 dmg += Edmg;
                 Edmg = 0;
             }
-            int Eheal = Ehealth - dmg;
+             Eheal = Ehealth - dmg;
 
-            int heal = health - Edmg;
+             heal = health - Edmg;
 
-            if (heal > 0)
-            {
-                particleManager.GetComponent<ParticleManager>().PlayerSpawn(green);
-                floatingText.GetComponent<FloatingText>().PlayerHealth(green, "+" + heal.ToString());
-            }else if (heal < 0)
-            {
-                particleManager.GetComponent<ParticleManager>().PlayerSpawn(red);
-                floatingText.GetComponent<FloatingText>().PlayerHealth(red, "-" + heal.ToString());
-            }
-            if (Eheal > 0)
-            {
-                particleManager.GetComponent<ParticleManager>().EnemySpawn(green);
-                floatingText.GetComponent<FloatingText>().EnemyHealth(green, "+"+Eheal.ToString());
-            }
-            else if (Eheal < 0)
-            {
-                particleManager.GetComponent<ParticleManager>().EnemySpawn(red);
-                floatingText.GetComponent<FloatingText>().EnemyHealth(red, "-" + Eheal.ToString());
-            }
-
-            playerHealth += heal*10;
-            EnemyHealth += Eheal*10;
+            
             
         }
+    }
+
+   public void damage()
+    {
+        if (heal > 0)
+        {
+            particleManager.GetComponent<ParticleManager>().PlayerSpawn(green);
+            floatingText.GetComponent<FloatingText>().PlayerHealth(green, "+" + heal.ToString());
+        }
+        else if (heal < 0)
+        {
+            particleManager.GetComponent<ParticleManager>().PlayerSpawn(red);
+            floatingText.GetComponent<FloatingText>().PlayerHealth(red, "-" + heal.ToString());
+        }
+        if (Eheal > 0)
+        {
+            particleManager.GetComponent<ParticleManager>().EnemySpawn(green);
+            floatingText.GetComponent<FloatingText>().EnemyHealth(green, "+" + Eheal.ToString());
+        }
+        else if (Eheal < 0)
+        {
+            particleManager.GetComponent<ParticleManager>().EnemySpawn(red);
+            floatingText.GetComponent<FloatingText>().EnemyHealth(red, "-" + Eheal.ToString());
+        }
+
+        playerHealth += heal * 10;
+        EnemyHealth += Eheal * 10;
     }
 
     public void play()
@@ -429,6 +441,9 @@ public class Game : MonoBehaviour
 
     public void nextRound()
     {
+        midText.SetActive(false);
+        midText.GetComponent<TextMesh>().text = "+";
+
         playing = false;
         foreach (Transform parent in handHolder.transform)
         {

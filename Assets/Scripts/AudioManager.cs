@@ -10,8 +10,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(int id)
     {
-        sfxSource.clip = database.GetComponent<CardDatabase>().cardAudios[id];
-        sfxSource.Play();
+        if (database.GetComponent<CardDatabase>().cardAudios.Count >= id)
+        {
+            sfxSource.clip = database.GetComponent<CardDatabase>().cardAudios[id];
+            sfxSource.Play();
+        }
     }
 
     public void PlayMusic()
