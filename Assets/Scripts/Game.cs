@@ -14,9 +14,11 @@ public class Game : MonoBehaviour
     //* (Without Anything)/P = Player
     //* E = Enemy
 
+    public GameObject floatingText;
+
     public GameObject particleManager;
-    private Color green = new(0.7f, 1f, 0.1275f,1);
-    private Color red = new(255, 20, 20, 1);
+    public Color green = new(0.7f, 1f, 0.1275f,1);
+    public Color red = new(255, 20, 20, 1);
 
     public List<GameObject> Hand = new();
     public List<int> EHand = new();
@@ -172,7 +174,7 @@ public class Game : MonoBehaviour
         eHealthText.text = EnemyHealth/10 + "/" + maxHealth / 10;
         time += Time.deltaTime * lerpSpeed;
         pHealthBar.value = Mathf.Lerp(pHealthBar.value, playerHealth, time);
-        eHealthBar.value = EnemyHealth;
+        eHealthBar.value = Mathf.Lerp(eHealthBar.value, EnemyHealth, time);
 
         playButtonText.text = (playing ? (Hand.Count > 0 ? "Continue" : "Next Round") : "Play");
 
@@ -182,6 +184,8 @@ public class Game : MonoBehaviour
 
     public void playPicked()
     {
+        if (pickedCards.Count == 2)
+        {
         foreach (Transform child in pickCardsHolder.transform)
         {
             Destroy(child.gameObject);
@@ -195,8 +199,6 @@ public class Game : MonoBehaviour
             }
         }
 
-        if (pickedCards.Count == 2)
-        {
             playing = true;
 
             int atk = 0;
@@ -352,13 +354,13 @@ public class Game : MonoBehaviour
             int Edmg = Eatk - def;
             if (dmg < 0)
             {
-                dmg = 0;
                 Edmg += dmg;
+                dmg = 0;
             }
             if (Edmg < 0)
             {
-                Edmg = 0;
                 dmg += Edmg;
+                Edmg = 0;
             }
             int Eheal = Ehealth - dmg;
 
@@ -367,22 +369,26 @@ public class Game : MonoBehaviour
             if (heal > 0)
             {
                 particleManager.GetComponent<ParticleManager>().PlayerSpawn(green);
+                floatingText.GetComponent<FloatingText>().PlayerHealth(green, "+" + heal.ToString());
             }else if (heal < 0)
             {
                 particleManager.GetComponent<ParticleManager>().PlayerSpawn(red);
+                floatingText.GetComponent<FloatingText>().PlayerHealth(red, "-" + heal.ToString());
             }
             if (Eheal > 0)
             {
                 particleManager.GetComponent<ParticleManager>().EnemySpawn(green);
+                floatingText.GetComponent<FloatingText>().EnemyHealth(green, "+"+Eheal.ToString());
             }
             else if (Eheal < 0)
             {
                 particleManager.GetComponent<ParticleManager>().EnemySpawn(red);
+                floatingText.GetComponent<FloatingText>().EnemyHealth(red, "-" + Eheal.ToString());
             }
 
             playerHealth += heal*10;
             EnemyHealth += Eheal*10;
-
+            
         }
     }
 
@@ -540,3 +546,4 @@ public class Game : MonoBehaviour
     }
 
 }
+

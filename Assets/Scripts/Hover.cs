@@ -7,6 +7,7 @@ public class Hover : MonoBehaviour
     public string selectableTag = "Selectable";
     private Transform _selection;
     public List<GameObject> pickedCards = new();
+    public GameObject shakeHolder;
 
     public Animator[] selectAnimator;
     public Animator[] unselectAnimator;
@@ -45,6 +46,7 @@ public class Hover : MonoBehaviour
             GameScript.GetComponent<Game>()._pickedCards[0].SetActive(true);
             GameScript.GetComponent<Game>()._pickedCards.RemoveAt(0);
         }
+            shakeHolder.GetComponent<Shake>().CamShake();
         GameScript.GetComponent<Game>()._pickedCards.Add(selection.parent.gameObject);
         selection.parent.gameObject.SetActive(false);
         }
