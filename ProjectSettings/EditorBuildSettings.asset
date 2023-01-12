@@ -6,9 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 7e028b7865ed88a4ab80d736e4b21c48
+  - enabled: 1
     path: Assets/Scenes/hex.unity
     guid: 35b61b4c7d430724aaca075bedced818
   - enabled: 1
     path: Assets/Scenes/HexPlay.unity
     guid: 1eadf4f167737d14cb67ee55c0ec62fc
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: 3a9f467c04e9099449fd9c305d8b7f22
+  - enabled: 1
+    path: Assets/Scenes/Lose.unity
+    guid: 992eb70a45014fd4ea4e37486eb24ca4
+  - enabled: 1
+    path: Assets/Scenes/Draw.unity
+    guid: 42d1a0da96b3a6645a6c5ba61c224a33
   m_configObjects: {}
