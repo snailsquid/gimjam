@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HexPlay.unity
     guid: 1eadf4f167737d14cb67ee55c0ec62fc
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: 3a9f467c04e9099449fd9c305d8b7f22
   m_configObjects: {}
